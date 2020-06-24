@@ -37,7 +37,10 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
 
-        real_credit = self.partner_id.commercial_partner_id.credit_available - self.amount_total
+        amount = self.currency_id._convert(
+            self.amount_total, self.company_id.currency_id, self.company_id, self.date_order or fields.Date.today())
+
+        real_credit = self.partner_id.commercial_partner_id.credit_available - amount
         invoice_expired = self.env['account.move'].search_count([
             ('invoice_payment_state', '!=', 'paid'),
             ('state', '=', 'posted'),
