@@ -14,50 +14,15 @@
     </style>
         <div class="header">
             <div class="row">
-                <div class="col-3 mb4">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
+                <div class="col-3">
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 85px;" alt="Logo"/>
                 </div>
-
-<!--                <t t-if="company.report_header">-->
-<!--                    <div class="col-4 text-right" style="margin-top:22px;" t-field="company.report_header" name="moto"/>-->
-<!--                     <t t-foreach="docs" t-as="doc">-->
-<!--                     <div class="col-5">-->
-
-<!--                                    <table class=" table table-sm" style="border-collapse:collapse">-->
-<!--                                    <tr style="text-align:center;">-->
-<!--                                        <td style="border: 1px solid #66a035">-->
-<!--                                            <span style="font-size:18px;width:50%">Factura</span>-->
-<!--                                        </td>-->
-<!--                                        <td style="width:50%;font-size:18px;color:white;background-color:#66a035;border: 1px solid #66a035">-->
-<!--                                            <span t-field="doc.name"/>-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                </table>-->
-
-<!--                            </div>-->
-<!--                            </t>-->
-<!--                    </t>-->
-<!--                <t t-else="">-->
-<!--                     <t t-foreach="docs" t-as="doc">-->
-<!--                         <div class="col-4"/>-->
-<!--                     <div class="col-5">-->
-<!--                                <table class=" table table-sm" style="border-collapse:collapse">-->
-<!--                                    <tr style="text-align:center;">-->
-<!--                                        <td style="border: 1px solid #66a035;width:50%">-->
-<!--                                            <span style="font-size:18px">Factura</span>-->
-<!--                                        </td>-->
-<!--                                        <td style="font-size:18px;color:white;background-color:#66a035;border: 1px solid #66a035;width:50%">-->
-<!--                                            <span t-field="doc.name"/>-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                </table>-->
-<!--                            </div>-->
-<!--                            </t>-->
-<!--                </t>-->
-
+                <div class="col-6">
+                    <h3 style="font-size:80%;">PRIME POWER OMEGA S.A de C.V <br/>
+                        REPORTE DE GARANTÍA
+                    </h3>
+                </div>
             </div>
-
-
         </div>
 
         <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
@@ -143,76 +108,161 @@
             <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})"/>
             <div class="page">
                 <style>
-          table,tr,td{
-          border: 2px solid #dbdbdb;
-          }
-      </style>
-                <table class="table" stlye="border:1px solid black;">
-                    <tr>
-                        <td style="background-color:#dbdbdb;  width: 50%">
-                            <b>REPORTE DE ANALISIS DE FALLAS</b>
-                        </td>
-                        <td>
-                            <b>Número de RMA:</b> <span t-field="doc.code"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Cliente:</b> <span t-field="doc.partner_id"/>
-                        </td>
-                        <td>
-                            <b>Escrito por:</b> <span t-field="doc.write_by_report"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Fecha:</b> <span t-field="doc.date"/>
-                        </td>
-                        <td>
-                            <b>Aprobado por:</b> <span t-field="doc.approved_by"/>
-                        </td>
-                    </tr>
+                    table{ width:100%;
+                    table-layout:fixed;
+                    font-size:12px;
+                    }
+                    tr,td{
+                  border: 2px solid #000080;
+                  }
+                  .bg{background-color: #dbdbdb}
+                  tr.padding td{padding-top:8px;padding-bottom:8px;}
+                 </style>
 
-                    <tr>
-                        <td colspan="2">
-                            <b>Cliente Reporta:</b> <span t-field="doc.name"/>
+                 <t t-foreach="doc.claim_line_ids" t-as="line">
+
+
+                <table>
+                            <!--COLS = 17-->
+
+                    <tr class="text-center bg">
+                        <td colspan="3"><b>Fecha</b></td>
+                        <td colspan="3"><b>N° Quality Alert</b></td>
+                        <td colspan="3"> <b>W.O</b></td>
+                        <td colspan="8"><b>Cliente</b></td>
+                    </tr>
+                    <tr class="text-center padding" >
+                        <td colspan="3" ><span t-field="doc.date" t-options-widget="'date'"/> </td>
+                        <td colspan="3"><span t-field="doc.code"/></td>
+                        <td colspan="3"><span t-field="doc.sale_id"/></td>
+                        <td colspan="8"><span t-field="doc.partner_id.name"/></td>
+                    </tr>
+                    <tr class="text-center  padding">
+                        <td class="bg" colspan="2"><b>Batería</b></td>
+                        <td><b>X</b></td>
+                        <td class="bg"><b>Celdas</b></td>
+                        <td><b>X</b></td>
+                        <td class="bg"> <b>Cargador</b></td>
+                        <td><b>X</b></td>
+                        <td class="bg" colspan="10"><b>No.Serie</b></td>
+                    </tr>
+                    <tr class="text-center  padding">
+                        <td class="bg" colspan="2"><b>Cantidad</b></td>
+                        <td><span t-field="line.quantity" t-options-widget="'integer'"/></td>
+                        <td class="bg"><b>Modelo</b></td>
+                        <td colspan="3"><span t-field="line.product_id.default_code"/></td>
+                        <td colspan="10">
+                            <t t-foreach="line.serial_lot_ids" t-as="lot">
+                                <span t-esc="lot.name"/>
+                            </t>
+                            </td>
+                    </tr>
+                    <tr class="bg padding">
+                        <td colspan="17" style="padding-left:5px">
+                            <b>Detalles del Equipo / Dispositivos Situación
+                            y/o Condición Actual</b>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <b>Evaluación:</b> <br/> <span align="justify" t-field="doc.description"/>
+                    <tr class="padding">
+                        <td colspan="17" style="padding-left:5px">
+                            <span t-field="doc.description"/>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <b>Análisis:</b> <br/>
+                    <tr class="text-center bg">
+                        <td colspan="9">
+                            <b>Aprecación del Cliente</b>
+                        </td>
+                        <td colspan="8">
+                            <b>Resultados de Prueba de Capacidad / Revisión interna de alguna celda</b>
+                        </td>
+                    </tr>
+                    <tr class="text-center padding">
+                        <td colspan="9">
+                            <span t-field="doc.name"/>
+                        </td>
+                        <td colspan="8">
+                            <span t-field="doc.results"/>
+                        </td>
+                    </tr>
+                    <tr class="text-center bg ">
+                        <td colspan="9">
+                            <b>Problema Identificado</b>
+                        </td>
+                        <td colspan="8">
+                            <b>Servicios y/o Acciones Preventivas / Correctivas</b>
+
+                        </td>
+                    </tr>
+                    <tr class="text-center padding">
+                        <td colspan="9">
+                            <t t-foreach="doc.cause" t-as="cause">
+                                <span t-esc="cause.description"/> <br/>
+                            </t>
+                        </td>
+                        <td colspan="8">
                             <span t-field="doc.resolution"/>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <b>Causa Raíz de Problema:</b>
-                            <p><span align="justify" t-field="doc.cause"/></p>
+                    <tr class="text-center">
+                        <td class="bg" colspan="9">
+                            <b>¿Garantía Procede?</b>
+                        </td>
+                        <td class="bg" colspan="2">
+                            <b>Si</b>
+                        </td>
+                        <td>
+                            <t t-if="doc.state in ['approve','process']">
+                                <b>X</b>
+                            </t>
+                        </td>
+                        <td class="bg" colspan="2">
+                            <b>No</b>
+                        </td>
+                        <td colspan="3">
+                             <t t-if="doc.state in ['reject']">
+                                <b>X</b>
+                            </t>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <b>Procede Garantía:</b>
-                            <p><span align="justify"/></p>
-                            <t t-if="doc.state in ['reject']">
-                                No
-                            </t>
-                            <t t-if="doc.state in ['approve','process','close']">
-                                Si
-                            </t>
-                            <t t-if="doc.state in ['draft']">
-                                En Espera de Validacion
-                            </t>
-
+                    <tr class="text-center bg ">
+                        <td colspan="14">
+                            <b>Detalle de Partes,Material o instalación involucrados</b>
+                        </td>
+                        <td colspan="3">
+                            <b>Costos ($) USD aprox</b>
+                        </td>
+                    </tr>
+                    <tr class="text-center ">
+                        <td colspan="14">
+                            <b>.</b>
+                        </td>
+                        <td colspan="3">
+                            <b>.</b>
+                        </td>
+                    </tr>
+                    <tr class="text-center bg ">
+                        <td colspan="10">
+                            <b>Departamento de Calidad Prime Power</b>
+                        </td>
+                        <td colspan="7">
+                            <b>Firma Aceptación Cliente / Vendedor <br/>
+                            <small>(Firma sólo en caso que se requiera)</small>
+                            </b>
+                        </td>
+                    </tr>
+                    <tr class="text-center padding">
+                        <td colspan="10">
+                            <span t-field="doc.user_id"/>
+                        </td>
+                        <td colspan="7">
 
                         </td>
                     </tr>
                 </table>
+                <t t-if="not line_last">
+                    <div style="page-break-after: always;"/>
+                </t>
+                </t>
         </div>
         </t>
     </template>

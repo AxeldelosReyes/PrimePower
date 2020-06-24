@@ -1,4 +1,5 @@
 from . import crm_claim_ept
+from . import crm_causes
 from . import account_move
 from . import stock_picking
 from . import stock_warehouse

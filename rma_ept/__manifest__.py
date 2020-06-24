@@ -34,6 +34,7 @@
         'views/repair_order_view.xml',
         'views/res_config_settings_views.xml',
         'views/claim_reject_message.xml',
+        'views/claim_causes.xml',
     ],
 
     # Odoo Store Specific

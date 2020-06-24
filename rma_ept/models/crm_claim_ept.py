@@ -165,7 +165,7 @@ class CRMClaim(models.Model):
                            help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     description = fields.Text(string='Descripción')
     resolution = fields.Text(string='Solución', copy=False)
-    cause = fields.Text(string='Causa Raíz')
+    cause = fields.Many2many('claim.causes',string='Causa Raíz')
 
     date_deadline = fields.Date(string='Fecha Limite', copy=False)
     date_action_next = fields.Datetime(string='Fecha de siguiente acción', copy=False)
@@ -218,6 +218,7 @@ class CRMClaim(models.Model):
     claim_lot_ids = fields.Many2many('stock.production.lot',
                                      compute='_compute_lot_ids')
     # repair_order_ids = fields.One2many('repair.order', 'ticket_id', string='Repairs')
+    results = fields.Text('Resultados de Pruebas')
 
     @api.onchange('motivo')
     def get_motivo(self):
