@@ -1,4 +1,4 @@
-from odoo import models, fields, api, exceptions,_
+from odoo import models, fields, api, exceptions, _
 from datetime import datetime
 from docutils.parsers.rst.directives import body
 from werkzeug.urls import url_encode
@@ -11,14 +11,19 @@ from lxml import etree
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency",
+                                          readonly=True,
+                                          help='Utility field to express amount currency')
     permitted_credit_limit = fields.Boolean('Limite de credito excedido permitido', default=False)
-    credit_limit = fields.Monetary(string="Limite de credito", related="partner_id.credit_limit")
-    credit_available = fields.Monetary(string="Credito disponible", related="partner_id.credit_available")
-    credit_partner = fields.Monetary(related="partner_id.credit")
+    credit_limit = fields.Monetary(string="Limite de credito", related="partner_id.credit_limit",
+                                   currency_field='company_currency_id', )
+    credit_available = fields.Monetary(string="Credito disponible", related="partner_id.credit_available",
+                                       currency_field='company_currency_id', )
+    credit_partner = fields.Monetary(related="partner_id.credit", currency_field='company_currency_id', )
     state = fields.Selection(selection_add=[('send_for_approval', "Por Validar")])
     is_validado = fields.Boolean(string="validado", copy='False')
     credit_approval = fields.Boolean()
-    approval_notification_ids = fields.Many2many('mail.message',string="Notification ID", copy=False)
+    approval_notification_ids = fields.Many2many('mail.message', string="Notification ID", copy=False)
 
     def action_open_credit_wizard(self):
         """This function returns an action that display existing vendor refund
@@ -34,7 +39,6 @@ class SaleOrder(models.Model):
         }
         return result
 
-
     def action_confirm(self):
 
         amount = self.currency_id._convert(
@@ -49,9 +53,10 @@ class SaleOrder(models.Model):
             # ('invoice_date_due', '>=', fields.Date.context_today(self).date()),]) > 0
             ('invoice_date_due', '<=', fields.Date.today())]) > 0
 
+        credit = self.partner_id.commercial_partner_id.credit_available == 0
         credit_limit = not self.permitted_credit_limit and real_credit <= 0 and self.payment_term_id.id != 1
 
-        if credit_limit or invoice_expired:
+        if credit_limit or invoice_expired or credit:
             action = self.env.ref('credit_limit_approval.credit_limit_alert_wizard_action')
             result = action.read()[0]
             vals = {
@@ -60,6 +65,7 @@ class SaleOrder(models.Model):
                 'default_credit_available': self.partner_id.commercial_partner_id.credit_available,
                 'default_invalid_limit': credit_limit,
                 'default_invalid_invoice': invoice_expired,
+                'default_credit': credit
             }
             result['context'] = vals
             return result
@@ -67,17 +73,14 @@ class SaleOrder(models.Model):
             res = super(SaleOrder, self).action_confirm()
             return res
 
-
-
     def reload(self):
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
 
-
     def accept_approval(self):
-        if  self.env.user.has_group('credit_limit_approval.credit_approval'):
+        if self.env.user.has_group('credit_limit_approval.credit_approval'):
             self['permitted_credit_limit'] = True
             res = super(SaleOrder, self).action_confirm()
             context = dict(self.env.context)
@@ -88,15 +91,13 @@ class SaleOrder(models.Model):
             raise UserError(_(
                 "No cuentas con los permisos para aprobar esta venta contacte a su administrador para validar."))
 
-
     def reject_approval(self):
         context = dict(self.env.context)
         """
         subject is a string used in the subject and body of the messages,use it when reply is true.
         """
         subject = _("Rechazado")
-        self.create_credit_limit_message(ctx=context,reply=True,subject=subject,accept=False)
-
+        self.create_credit_limit_message(ctx=context, reply=True, subject=subject, accept=False)
 
     def action_cancel(self):
         res = super(SaleOrder, self).action_cancel()
@@ -105,7 +106,7 @@ class SaleOrder(models.Model):
 
         return res
 
-    def create_credit_limit_message(self,ctx=False,reply=False,subject=False,accept=False):
+    def create_credit_limit_message(self, ctx=False, reply=False, subject=False, accept=False):
         manager_ref = self.env.ref('credit_limit_approval.credit_approval')
         managers = []
         manager_partner = []
@@ -148,7 +149,7 @@ class SaleOrder(models.Model):
             if not accept:
                 self.credit_approval = False
                 self.state = 'draft'
-            body = _('<a href=%s>Crédito %s  %s </a><br />') % (url,subject,name)
+            body = _('<a href=%s>Crédito %s  %s </a><br />') % (url, subject, name)
             author_id = self.env.user.partner_id
             message = _("Crédito %s") % subject
 
@@ -158,7 +159,7 @@ class SaleOrder(models.Model):
             author_id = self.user_id.partner_id
             message = _("Venta %s en espera de aprobación") % name
             self.credit_approval = True
-        vals={
+        vals = {
             'author_id': author_id.id,
             'date': time.strftime('%Y-%m-%d %H:%M:%S'),
             'message_type': 'comment',
@@ -166,15 +167,14 @@ class SaleOrder(models.Model):
             'model': 'sale.order',
             'res_id': id_self,
             'partner_ids': [(6, 0, manager_partner)],
-            #'needaction_partner_ids': [(6, 0, manager_partner)],
+            # 'needaction_partner_ids': [(6, 0, manager_partner)],
             'subject': _('Venta %s') % (name),
             'body': body
         }
 
-
-        new_message=self.env['mail.message'].sudo().create(vals)
+        new_message = self.env['mail.message'].sudo().create(vals)
         if not reply:
-            self.approval_notification_ids=[(6,0,[new_message.id])]
+            self.approval_notification_ids = [(6, 0, [new_message.id])]
         else:
             for msg in self.approval_notification_ids:
                 for manager in msg.notification_ids:
@@ -182,6 +182,6 @@ class SaleOrder(models.Model):
                         'is_read': True
                     })
             self.approval_notification_ids = [(5, 0, 0)]
-        self.message_notify(body=message,partner_ids=manager_partner)
-       # self.message_post(body=message)
+        self.message_notify(body=message, partner_ids=manager_partner)
+        # self.message_post(body=message)
         self.reload()

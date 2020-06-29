@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='property_payment_term_id']" position="after">
-                    <field name="credit"/>
+                    <field name="credit" />
                     <field name="credit_limit"/>
                     <field name="credit_available"/>
                 </xpath>

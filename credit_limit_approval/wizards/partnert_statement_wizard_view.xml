@@ -12,9 +12,13 @@
                     <field name="sale_id" readonly="True"/>
                     <field name="invalid_limit" invisible="True"/>
                     <field name="invalid_invoice" invisible="True"/>
+                    <field name="credit" invisible="True"/>
                   <!--  <field name="credit_available" readonly="True"/>-->
                 </group>
                 <div>
+                    <h3 attrs="{'invisible': [('credit', '=', False)]}">
+                     El Credito disponible del cliente es igual a 0.
+                   </h3>
                    <h3 attrs="{'invisible': [('invalid_limit', '=', False)]}">
                      El Credito disponible del cliente supera el credito establecido, se requiere aprobacion del departamento de Credito. Favor de enviar solicitud del pedido de venta.
                    </h3>

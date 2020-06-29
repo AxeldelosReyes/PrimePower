@@ -14,6 +14,7 @@ class PosOrderLineWizardReport(models.TransientModel):
     credit_available = fields.Float(string="Credito disponible",)
     invalid_limit = fields.Boolean()
     invalid_invoice = fields.Boolean()
+    credit = fields.Boolean()
 
     def send_for_approval(self):
         context = dict(self.env.context)

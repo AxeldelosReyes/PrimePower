@@ -18,9 +18,10 @@
                 <xpath expr="//notebook" position="inside">
                         <page name="credito" string="Credito" groups="credit_limit_approval.credit_approval">
                             <group>
-                                <field name="credit_limit" />
-                                <field name="credit_available"/>
-                                <field name="credit_partner"/>
+                                <field name="company_currency_id" invisible="1"/>
+                                <field name="credit_limit" options="{'currency_field': 'company_currency_id'}"/>
+                                <field name="credit_available" options="{'currency_field': 'company_currency_id'}"/>
+                                <field name="credit_partner" options="{'currency_field': 'company_currency_id'}" />
                             </group>
 
                         </page>
