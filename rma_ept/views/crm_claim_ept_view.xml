@@ -105,6 +105,7 @@
                         </h1>
                         <group colspan="4" col="4" groups="base.group_user">
                             <field name="motivo" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="tipo_productos" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"

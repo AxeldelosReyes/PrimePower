@@ -185,7 +185,7 @@ class CRMClaim(models.Model):
             string='Action Type')
     user_id = fields.Many2one('res.users', string='Responnsable', track_visibility='always',
                               default=lambda self:self._uid)
-    section_id = fields.Many2one('crm.team', string='Equipo de Ventas', index=True,
+    section_id = fields.Many2one('crm.team', string='Ejecutivo de ventas', index=True,
                                  default=lambda self:self._get_default_section_id(),
                                  help="Responsible sales channel." " Define Responsible user and Email account for" "mail gateway.")
     company_id = fields.Many2one('res.company', string='Company',
@@ -219,7 +219,10 @@ class CRMClaim(models.Model):
                                      compute='_compute_lot_ids')
     # repair_order_ids = fields.One2many('repair.order', 'ticket_id', string='Repairs')
     results = fields.Text('Resultados de Pruebas')
-
+    tipo_productos = fields.Selection(string="Tipo de Producto",
+                                      selection=[('bateria', 'Batería'), ('cargador', 'Cargador'),('celda', 'Celda'),
+                                                 ('otro', 'Otro')],
+                                      required=False, )
     @api.onchange('motivo')
     def get_motivo(self):
         for record in self:
