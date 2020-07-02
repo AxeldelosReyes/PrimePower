@@ -189,7 +189,7 @@
                         </td>
                     </tr>
                     <tr class="padding">
-                        <td colspan="9" class="text-center" >
+                        <td colspan="9" class="text-center">
                             <span t-field="doc.name"/>
                         </td>
                         <td colspan="8" class="text-left" style="padding-left:5px">
@@ -205,13 +205,13 @@
 
                         </td>
                     </tr>
-                    <tr class="text-center padding">
-                        <td colspan="9">
+                    <tr class="padding">
+                        <td colspan="9" style="padding-left:5px">
                             <t t-foreach="doc.cause" t-as="cause">
                                 <span t-esc="cause.description"/> <br/>
                             </t>
                         </td>
-                        <td colspan="8">
+                        <td colspan="8" style="padding-left:5px">
                             <span t-field="doc.resolution"/>
                         </td>
                     </tr>
@@ -223,7 +223,7 @@
                             <b>Si</b>
                         </td>
                         <td>
-                            <t t-if="doc.state in ['approve','process']">
+                            <t t-if="doc.state not in ['draft','reject']">
                                 <b>X</b>
                             </t>
                         </td>

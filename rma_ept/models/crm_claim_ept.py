@@ -185,6 +185,7 @@ class CRMClaim(models.Model):
             string='Action Type')
     user_id = fields.Many2one('res.users', string='Responnsable', track_visibility='always',
                               default=lambda self:self._uid)
+    ejecutivo_ventas = fields.Many2one('res.users', string='Ejecutivo de ventas',related="sale_id.user_id")
     section_id = fields.Many2one('crm.team', string='Ejecutivo de ventas', index=True,
                                  default=lambda self:self._get_default_section_id(),
                                  help="Responsible sales channel." " Define Responsible user and Email account for" "mail gateway.")

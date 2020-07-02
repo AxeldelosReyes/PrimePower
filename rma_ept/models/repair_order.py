@@ -113,6 +113,7 @@ class RepairOrder(models.Model):
         if pickings:
             pickings.action_assign()
             if self.lot_id:
+                return True
                 pickings.move_lines.move_line_ids[0].write({'lot_id':self.lot_id.id})
         return True
 

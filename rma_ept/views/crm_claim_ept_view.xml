@@ -112,7 +112,9 @@
                                    context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                             <field name="priority" attrs="{'readonly':[('state','!=','draft')]}"
                                    widget="priority"/>
-                            <field name="section_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+<!--                            <field name="section_id" attrs="{'readonly':[('state','!=','draft')]}"/>-->
+                            <field name="ejecutivo_ventas"/>
+
                             <field name="date_deadline"
                                    attrs="{'readonly':[('state','!=','draft')]}"/>
                             <field name="is_rma_without_incoming"
