@@ -408,7 +408,7 @@ class CRMClaim(models.Model):
                     [('group_id', '=', stock_picking_id.group_id.id),
                      ('location_id', '=', self.location_id.id),
                      ('picking_type_id.code', '=', 'internal'),
-                     ('state', 'not in', ['cancel', 'draft'])])
+                     ('state', 'not in', ['cancel', 'draft'])] , limit=1)
             if claim_lines:
                 self.write({'internal_picking_ids':[(4, internal_picking_id.id)]})
             else:
