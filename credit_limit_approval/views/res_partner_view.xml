@@ -8,8 +8,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='property_payment_term_id']" position="after">
                     <field name="credit" />
-                    <field name="credit_limit"/>
-                    <field name="credit_available"/>
+                    <field name="credit_limit" attrs="{'readonly':[('current_user_approval','=',False)]}"/>
+                    <field name="credit_available" />
+                    <field name="current_user_approval" invisible="1"/>
                 </xpath>
             </field>
         </record>

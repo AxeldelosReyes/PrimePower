@@ -14,6 +14,13 @@ class CreditLimitAlertResPartner(models.Model):
 
         pass
 
+    current_user_approval = fields.Boolean('is current user approval', compute='_get_current_user', store=False)
+
+    def _get_current_user(self):
+        for record in self:
+            record.current_user_approval = record.env.user.has_group('credit_limit_approval.credit_approval')
+
+
     def call_wizard(self):
         wizard_form = self.env.ref('credit_limit_alert.credit_limit_alert_partner_statement_wizard_view', False)
         view_id = self.env['credit_limit_alert.partner_statement_wizard']
