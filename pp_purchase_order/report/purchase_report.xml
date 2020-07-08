@@ -96,14 +96,14 @@
                         <td>
                             <span t-field="line.product_uom"/>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <span t-field="line.product_qty" t-options-widget="'integer'"/>
                         </td>
-                        <td>
+                        <td  class="text-center">
                             <span t-field="line.price_unit"/>
                         </td>
                         <!--<td><span t-field="line.product_uom"/></td>-->
-                        <td>
+                        <td class="text-right">
                             <span t-field="line.price_subtotal"/>
                         </td>
                     </t>
