@@ -117,7 +117,7 @@
             <br/>
             <div id="total" class="row">
                 <div class="col-5">
-<!--                    <span t-esc="o.amount_in_letter()"/>-->
+                    <span t-esc="o.amount_in_letter()"/>
                 </div>
                 <div class="col-4 offset-3">
                     <table class="table table-sm">
