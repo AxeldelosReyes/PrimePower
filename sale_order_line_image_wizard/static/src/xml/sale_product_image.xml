@@ -10,7 +10,7 @@
         <button t-if="data.has_image" class="text-left btn btn-link action_open_image"
             type="button">
             <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
-            View Image
+            Ver Imagen
         </button>
     </div>
 </templates>
