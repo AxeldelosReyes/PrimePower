@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'views':[[self.env.ref('sale_order_line_image_wizard.product_template_image_wizard').id, 'form']],
-
+            'flags': {'mode': 'readonly'},
         }
 
 

@@ -54,7 +54,7 @@ var SaleProductImage = Widget.extend({
      */
     _setPopOver: function () {
         var self = this;
-        console.log(this.data.has_image);
+
         if (!this.data.has_image) {
             return;
         }
@@ -71,7 +71,7 @@ var SaleProductImage = Widget.extend({
                 method: 'open_image_wizard',
                 args: [[product]],
             }).then(function(result) {
-            console.log(result);
+
                 self.do_action(result);
             });
             return;
