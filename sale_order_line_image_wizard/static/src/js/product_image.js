@@ -81,7 +81,7 @@ var SaleProductImage = Widget.extend({
             content: $content,
             html: true,
             placement: 'right',
-            title: _t('Availability'),
+            title: _t('Image'),
             trigger: 'focus',
             delay: {'show': 0, 'hide': 100 },
         };
