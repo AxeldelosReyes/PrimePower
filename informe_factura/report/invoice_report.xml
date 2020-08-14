@@ -355,6 +355,17 @@
                                     <span t-field="l.name"/>
                                 </td>
                             </t>
+                            <t t-if="line.related_reserved_lots">
+                            <t t-set="all_lots" t-value="line.related_reserved_lots.split(',')"/>
+                                <td colspan="99">
+                                    <t t-foreach="all_lots" t-as="lot">
+                                        <span t-esc="lot" style="white-space: nowrap;"/>
+                                        <t t-if="not lot_last">
+                                            <span>,</span>
+                                        </t>
+                                    </t>
+                                </td>
+                            </t>
                         </tr>
                     </tbody>
                 </table>
