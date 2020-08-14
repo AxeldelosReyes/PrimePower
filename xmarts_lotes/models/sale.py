@@ -25,7 +25,6 @@ class SaleOrderLine(models.Model):
     def _prepare_invoice_line(self):
         values = super(SaleOrderLine, self)._prepare_invoice_line()
         if self.product_id.tracking != 'none':
-            values['quantity'] = self.moves_reserved_qty
             values['related_reserved_lots'] = self.related_lots
         return values
 
