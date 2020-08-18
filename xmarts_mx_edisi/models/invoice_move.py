@@ -1,14 +1,15 @@
 import base64
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 
 class Accountmove(models.Model):
     _inherit = 'account.move'
 
-    edi_uuid2 = fields.Char(string="uuid2")
+    edi_uuid2 = fields.Char(string="uuid2", copy=False)
     l10n_mx_edi_cfdi_name = fields.Char(string='CFDI name', copy=False, readonly=True,
                                         help='The attachment name of the CFDI.')
+    skip_mx_edi_invoice = fields.Boolean(string="No Timbrar", copy=False)
 
     @api.depends('l10n_mx_edi_cfdi_name', 'edi_uuid2')
     def _compute_cfdi_values(self):
@@ -44,3 +45,8 @@ class Accountmove(models.Model):
             inv.l10n_mx_edi_cfdi_customer_rfc = tree.Receptor.get(
                 'Rfc', tree.Receptor.get('rfc'))
             certificate = tree.get('noCertificado', tree.get('NoCertificado'))
+
+    def l10n_mx_edi_is_required(self):
+        self.ensure_one()
+        return (self.is_sale_document() and self.company_id.country_id == self.env.ref(
+            'base.mx') and not self.skip_mx_edi_invoice)
